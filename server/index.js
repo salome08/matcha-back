@@ -4,6 +4,7 @@ const app = express()
 
 app.set('port', process.env.port || 1234);
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
 	res.send('hello');
 })
