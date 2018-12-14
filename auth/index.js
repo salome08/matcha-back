@@ -10,13 +10,20 @@ router.get('/', (req, res) => {
 });
 
 function validUser(user) {
+	const validName = typeof user.firstname == 'string' &&
+		user.firstname.trim() != '';
+	const validLastName = typeof user.lastname == 'string' &&
+		user.lastname.trim() != '';
+	const validLogin = typeof user.login == 'string' &&
+		user.login.trim() != '';
 	const validEmail = typeof user.email == 'string' &&
 		user.email.trim() != '';
 	const validPassword = typeof user.password == 'string' &&
 		user.password.trim() != '' &&
 		user.password.trim().length >= 6;
 
-	return validEmail && validPassword;
+	return validEmail && validPassword && validName && validLastName &&
+		validLogin;
 }
 
 router.post('/signup', (req, res, next) => {
@@ -26,32 +33,43 @@ router.post('/signup', (req, res, next) => {
 		.then(user => {
 			console.log('user', user);
 			if(!user){
-				bcrypt.hash(req.body.password, 8)
-					.then((hash) => {
-
-					const user = {
-						email: req.body.email,
-						password: hash,
-						created_at: new Date()
-					};
-
-					User
-					.create(user)
-					.then(id => {
-						res.json({
-						id,
-						message: '🔓'
+				//if user do not exist
+				//check for unique login
+				User
+				.getOneByLogin(req.body.login)
+				.then(user => {
+					if(!user){
+						//unique login
+						bcrypt
+						.hash(req.body.password, 8)
+						.then((hash) => {
+							const user = {
+								firstname: req.body.firstname,
+								lastname: req.body.lastname,
+								login: req.body.login,
+								password: hash,
+								email: req.body.email,
+								created_at: new Date()
+							};
+							User
+							.create(user)
+							.then(id => {
+								res.json({
+									id,
+									message: '🔓'
+								});
+							})
 						});
-					})
-					//insert into db
-					//redirect
-
+					}
+					else{
+						next(new Error('Login already used'));
+					}
 				});
+
 			}
 			else {
 				next(new Error('Email in  use'));
 			}
-
 		});
 	}
 	else {
@@ -77,11 +95,12 @@ router.post('/login', (req, res, next) => {
 							res.cookie('user_id', user.id, {
 								httpOnly: 'true',
 								// secure: 'true', secure when the production
+								secure: req.app.get('env') === 'development',
 								signed: 'true'
 							});
 							res.json({
     						result,
-								message: 'Logging... 🔓'
+								message: 'Logged in 🔓'
 							});
     				}
     					else {
