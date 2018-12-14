@@ -26,6 +26,16 @@ function validUser(user) {
 		validLogin;
 }
 
+function validUserLog(user) {
+	const validLogin = typeof user.login == 'string' &&
+		user.login.trim() != '';
+	const validPassword = typeof user.password == 'string' &&
+		user.password.trim() != '' &&
+		user.password.trim().length >= 6;
+
+	return  validPassword && validLogin;
+}
+
 router.post('/signup', (req, res, next) => {
 	if(validUser(req.body)) {
 		User
@@ -78,10 +88,10 @@ router.post('/signup', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-	if(validUser(req.body)){
+	if(validUserLog(req.body)){
 		//check to see if it's in db
 		User
-		.getOneByEmail(req.body.email)
+		.getOneByLogin(req.body.login)
 		.then(user => {
 			console.log('user', user);
 			if(user){
