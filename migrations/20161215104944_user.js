@@ -8,7 +8,7 @@ exports.up = function(knex, Promise) {
     table.text('password').notNullable();
     table.text('email').unique().notNullable();
     table.datetime('date').notNullable();
-    table.boolean('is_active').notNullable().defaultTo(true);
+    table.boolean('is_active').notNullable().defaultTo(false);
   });
 };
 

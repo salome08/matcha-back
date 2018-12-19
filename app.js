@@ -7,9 +7,9 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 
 var index = require('./routes/index');
-var user = require('./routes/user');
+var users = require('./routes/users');
 var auth = require('./auth');
-
+var authMiddleware = require('./auth/middleware');
 var app = express();
 
 // view engine setup
@@ -23,11 +23,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors({
+  credentials: true
+}));
 
-app.use('/', index);
-app.use('/user', user);
 app.use('/auth', auth);
+app.use('/', index);
+app.use('/users', authMiddleware.takeToken, users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

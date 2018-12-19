@@ -2,10 +2,20 @@ const express = require('express');
 const router = express.Router();
 const User = require('../db/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const authMiddleware = require('./middleware');
 
-router.get('/', (req, res) => {
-	res.json({
-		message: '🔐'
+router.get('/', authMiddleware.takeToken ,(req, res) => {
+	jwt.verify(req.token, 'secretkey', (err, authData) => {
+		if(err){
+			res.sendStatus(403);
+		}
+		else{
+			res.json({
+				message: 'hello 🔓',
+				authData
+			});
+		}
 	});
 });
 
@@ -101,25 +111,26 @@ router.post('/login', (req, res, next) => {
 				.then((result) => {
     				//if the passwords matched
     				if(result){
-							//sentting the set-cookie header
-							res.cookie('user_id', user.id, {
-								httpOnly: 'true',
-								// secure: 'true', secure when the production
-								secure: req.app.get('env') === 'development',
-								signed: 'true'
-							});
-							res.json({
-    						result,
-								message: 'Logged in 🔓'
-							});
+							if(user.is_active){
+								//create jsonwebtoken with key to save in local storage
+								jwt.sign({user: user}, 'secretkey', {expiresIn: '2000s'},(err, token) => {
+									res.json({
+										user,
+										token
+									});
+								});
+							}
+							else {
+								next(new Error('Please confirm your email'));
+							}
     				}
-    					else {
-    						next(new Error('Invalid login'));
-    					}
+  					else {
+  						next(new Error('Wrong password'));
+  					}
 				});
 			}
 			else{
-				next(new Error('Invalid login'));
+				next(new Error('User do not exist'));
 			}
 		})
 		//find in db

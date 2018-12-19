@@ -1,6 +1,9 @@
 const knex = require('./connection');
 
 module.exports = {
+  getAll: function () {
+    return knex('user');
+  },
   getOne: function (id) {
     return knex('user').where('id', id).first();
   },
@@ -14,5 +17,8 @@ module.exports = {
   	return knex('user').insert(user, 'id').then(ids => {
   		return ids[0];
   	});
+  },
+  deleteOne: function (id) {
+    return knex('user').where('id', id).del();
   }
 }
