@@ -9,7 +9,9 @@ var cors = require('cors');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var auth = require('./auth');
+var confirmation = require('./mail/confirmation');
 var authMiddleware = require('./auth/middleware');
+
 var app = express();
 
 // view engine setup

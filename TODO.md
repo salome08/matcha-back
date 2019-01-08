@@ -6,7 +6,7 @@ Add form-based cookie authentication to our sticker-mania app.
 * Visitors - can only view the homepage
 * Logged In User - can only view the their page
 * Admin User - can view any page; can de-activate users;
-
+https://codemoto.io/coding/nodejs/email-verification-node-express-mongodb
 ## Authentication
 * [ ] Add auth router
 * [ ] Create user with POST /auth/signup

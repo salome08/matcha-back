@@ -4,6 +4,7 @@ const User = require('../db/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('./middleware');
+const mail = require('../mail/mail');
 
 router.get('/', authMiddleware.takeToken ,(req, res) => {
 	jwt.verify(req.token, 'secretkey', (err, authData) => {
@@ -20,12 +21,12 @@ router.get('/', authMiddleware.takeToken ,(req, res) => {
 });
 
 function validUser(user) {
-	const validName = typeof user.firstname == 'string' &&
-		user.firstname.trim() != '';
-	const validLastName = typeof user.lastname == 'string' &&
-		user.lastname.trim() != '';
-	const validLogin = typeof user.login == 'string' &&
-		user.login.trim() != '';
+	const validName = typeof user.firstName == 'string' &&
+		user.firstName.trim() != '';
+	const validLastName = typeof user.lastName == 'string' &&
+		user.lastName.trim() != '';
+	const validLogin = typeof user.username == 'string' &&
+		user.username.trim() != '';
 	const validEmail = typeof user.email == 'string' &&
 		user.email.trim() != '';
 	const validPassword = typeof user.password == 'string' &&
@@ -37,8 +38,8 @@ function validUser(user) {
 }
 
 function validUserLog(user) {
-	const validLogin = typeof user.login == 'string' &&
-		user.login.trim() != '';
+	const validLogin = typeof user.username == 'string' &&
+		user.username.trim() != '';
 	const validPassword = typeof user.password == 'string' &&
 		user.password.trim() != '' &&
 		user.password.trim().length >= 6;
@@ -55,8 +56,9 @@ router.post('/signup', (req, res, next) => {
 			if(!user){
 				//if user do not exist
 				//check for unique login
+				console.log(req.body.username);
 				User
-				.getOneByLogin(req.body.login)
+				.getOneByLogin(req.body.username)
 				.then(user => {
 					if(!user){
 						//unique login
@@ -64,20 +66,21 @@ router.post('/signup', (req, res, next) => {
 						.hash(req.body.password, 8)
 						.then((hash) => {
 							const user = {
-								firstname: req.body.firstname,
-								lastname: req.body.lastname,
-								login: req.body.login,
+								firstname: req.body.firstName,
+								lastname: req.body.lastName,
+								login: req.body.username,
 								password: hash,
 								email: req.body.email,
 								created_at: new Date()
 							};
 							User
 							.create(user)
-							.then(id => {
+							.then(user => {
 								res.json({
-									id,
+									user,
 									message: '🔓'
 								});
+								mail.sendConfirmationMail(user);
 							})
 						});
 					}
@@ -101,7 +104,7 @@ router.post('/login', (req, res, next) => {
 	if(validUserLog(req.body)){
 		//check to see if it's in db
 		User
-		.getOneByLogin(req.body.login)
+		.getOneByLogin(req.body.username)
 		.then(user => {
 			console.log('user', user);
 			if(user){
