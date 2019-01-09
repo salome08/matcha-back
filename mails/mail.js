@@ -4,8 +4,9 @@ const xoauth2 = require('xoauth2');
 const smtpTransport = require('nodemailer-smtp-transport');
 
 
-function sendConfirmationMail(user){
+function sendConfirmationMail(user, token){
   // create reusable transport method (opens pool of SMTP connections)
+  console.log(user.email);
   const transporter = nodemailer.createTransport(smtpTransport({
       service: 'Gmail',
       host: 'smtp.gmail.com',

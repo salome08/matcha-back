@@ -4,10 +4,12 @@ const User = require('../db/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('./middleware');
-const mail = require('../mail/mail');
+const mail = require('../mails/mail');
+const crypto = require('crypto');
+const Token = require('../db/token');
 
 router.get('/', authMiddleware.takeToken ,(req, res) => {
-	jwt.verify(req.token, 'secretkey', (err, authData) => {
+	jwt.verify(req.token, 'loginToken', (err, authData) => {
 		if(err){
 			res.sendStatus(403);
 		}
@@ -52,16 +54,14 @@ router.post('/signup', (req, res, next) => {
 		User
 		.getOneByEmail(req.body.email)
 		.then(user => {
-			console.log('user', user);
 			if(!user){
 				//if user do not exist
 				//check for unique login
-				console.log(req.body.username);
 				User
 				.getOneByLogin(req.body.username)
 				.then(user => {
 					if(!user){
-						//unique login
+						//unique login, create ash
 						bcrypt
 						.hash(req.body.password, 8)
 						.then((hash) => {
@@ -73,14 +73,29 @@ router.post('/signup', (req, res, next) => {
 								email: req.body.email,
 								created_at: new Date()
 							};
+							//save user in db
 							User
 							.create(user)
 							.then(user => {
-								res.json({
-									user,
-									message: '🔓'
+								// res.json({
+								// 	user,
+								// 	message: '🔓'
+								// });
+								//create verification token for this users
+								jwt.sign({user: user}, 'mailConfirmationToken', {expiresIn: '12d'},(err, token) => {
+									//save verification token
+
+
+									Token
+									.create(token, user);
+										//send mail
+
+										// mail.sendConfirmationMail(user, token);
+
+
+
 								});
-								mail.sendConfirmationMail(user);
+
 							})
 						});
 					}
@@ -106,7 +121,6 @@ router.post('/login', (req, res, next) => {
 		User
 		.getOneByLogin(req.body.username)
 		.then(user => {
-			console.log('user', user);
 			if(user){
 				//compare password to hashed password
 				bcrypt
@@ -116,7 +130,7 @@ router.post('/login', (req, res, next) => {
     				if(result){
 							if(user.is_active){
 								//create jsonwebtoken with key to save in local storage
-								jwt.sign({user: user}, 'secretkey', {expiresIn: '2000s'},(err, token) => {
+								jwt.sign({user: user}, 'loginToken', {expiresIn: '2000s'},(err, token) => {
 									res.json({
 										user,
 										token
