@@ -84,18 +84,27 @@ router.post('/signup', (req, res, next) => {
 								//create verification token for this users
 								jwt.sign({user: user}, 'mailConfirmationToken', {expiresIn: '12d'},(err, token) => {
 									//save verification token
-
-
+									const tokens = {
+										user_id: user,
+										token: token,
+										created_at: new Date()
+									};
+									//keep token in db
 									Token
-									.create(token, user);
+									.create(tokens)
+									.then(token => {
+										res.json({
+											token,
+											message: 'token is in db'
+										});
 										//send mail
-
-										// mail.sendConfirmationMail(user, token);
-
-
-
+										mail.sendConfirmationMail(req.body.email, tokens, (err, res) => {
+											if (err) {
+												next(new Error('Error: Email has not been send'));
+											}
+										});
+									})
 								});
-
 							})
 						});
 					}

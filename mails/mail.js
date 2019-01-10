@@ -6,7 +6,6 @@ const smtpTransport = require('nodemailer-smtp-transport');
 
 function sendConfirmationMail(user, token){
   // create reusable transport method (opens pool of SMTP connections)
-  console.log(user.email);
   const transporter = nodemailer.createTransport(smtpTransport({
       service: 'Gmail',
       host: 'smtp.gmail.com',
@@ -24,23 +23,26 @@ function sendConfirmationMail(user, token){
   // setup e-mail data with unicode symbols
   const mailOptions = {
       from: "Matcha ✔ <" + process.env.ENV_MAIL + ">", // sender address
-      to: user.email, // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: "Hello world j'ai reussi haha ✔", // plaintext body
-      html: "<b>Hello world ✔</b>" // html body
+      to: user, // list of receivers
+      subject: "Account Verification Token", // Subject line
+      text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/confirmation\/' + token.token + '.\n' // plaintext body
+      // html: "<b>Hello world ✔</b>" + token // html body
   }
 
   // send mail with defined transport object
-  transporter.sendMail(mailOptions, function(error, response){
-      if(error){
-          console.log(error);
-      }else{
-          console.log("Message sent: " + response.message);
-      }
-
-      // if you don't want to use this transport object anymore, uncomment following line
-      //smtpTransport.close(); // shut down the connection pool, no more messages
-  });
+  return (transporter.sendMail(mailOptions));
+  //   , function(error, response)
+  // {
+  //     if(error){
+  //       return res.status(500).send({ msg: err.message });
+  //     }
+  //     else{
+  //       res.status(200).send('A verification email has been sent to ' + user + '.');
+  //     }
+  //
+  //     // if you don't want to use this transport object anymore, uncomment following line
+  //     //smtpTransport.close(); // shut down the connection pool, no more messages
+  // });
 }
 
 module.exports = {

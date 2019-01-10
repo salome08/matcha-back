@@ -31,6 +31,7 @@ app.use(cors({
 
 app.use('/auth', auth);
 app.use('/', index);
+app.use('/mails', confirmation);
 app.use('/users', authMiddleware.takeToken, users);
 
 // catch 404 and forward to error handler
