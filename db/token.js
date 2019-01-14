@@ -6,7 +6,7 @@ module.exports = {
       return ids[0];
   	});
   },
-  getOne: (id) => {
-    return knex('tokens').where('id', user).first();
+  getOne: (token) => {
+    return knex('tokens').where('token', token).first();
   }
 }

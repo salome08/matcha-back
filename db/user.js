@@ -1,24 +1,29 @@
 const knex = require('./connection');
 
 module.exports = {
-  getAll: function () {
+  getAll:  () => {
     return knex('user');
   },
-  getOne: function (id) {
+  getOne:  (id) => {
     return knex('user').where('id', id).first();
   },
-  getOneByLogin: function (login) {
+  getOneByLogin:  (login) => {
     return knex('user').where('login', login).first();
   },
-  getOneByEmail: function (email) {
+  getOneByEmail:  (email) => {
   	return knex('user').where('email', email).first();
   },
-  create: function (user) {
+  create:  (user) => {
   	return knex('user').insert(user, 'id').then(ids => {
   		return ids[0];
   	});
   },
-  deleteOne: function (id) {
+  deleteOne:  (id) => {
     return knex('user').where('id', id).del();
+  },
+  activate: (id) => {
+    return knex('user').where('id', id).update({
+      is_active: 'true'
+    })
   }
 }

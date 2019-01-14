@@ -4,8 +4,9 @@ const xoauth2 = require('xoauth2');
 const smtpTransport = require('nodemailer-smtp-transport');
 
 
-function sendConfirmationMail(user, token){
+function sendConfirmationMail(email, token){
   // create reusable transport method (opens pool of SMTP connections)
+  console.log('token mail : ', token.token);
   const transporter = nodemailer.createTransport(smtpTransport({
       service: 'Gmail',
       host: 'smtp.gmail.com',
@@ -23,9 +24,9 @@ function sendConfirmationMail(user, token){
   // setup e-mail data with unicode symbols
   const mailOptions = {
       from: "Matcha ✔ <" + process.env.ENV_MAIL + ">", // sender address
-      to: user, // list of receivers
+      to: email, // list of receivers
       subject: "Account Verification Token", // Subject line
-      text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/confirmation\/' + token.token + '.\n' // plaintext body
+      text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/localhost:3000/mails\/confirmation?id='+ token.user_id + '&token=' + token.token + '.\n' // plaintext body
       // html: "<b>Hello world ✔</b>" + token // html body
   }
 

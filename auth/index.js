@@ -89,12 +89,12 @@ router.post('/signup', (req, res, next) => {
 										token: token,
 										created_at: new Date()
 									};
+									console.log('token db : ', tokens.token);
 									//keep token in db
 									Token
 									.create(tokens)
 									.then(token => {
 										res.json({
-											token,
 											message: 'token is in db'
 										});
 										//send mail
