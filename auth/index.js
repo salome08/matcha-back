@@ -7,6 +7,8 @@ const authMiddleware = require('./middleware');
 const mail = require('../mails/mail');
 const crypto = require('crypto');
 const Token = require('../db/token');
+var validator = require('email-validator');
+
 
 router.get('/', authMiddleware.takeToken ,(req, res) => {
 	jwt.verify(req.token, 'loginToken', (err, authData) => {
@@ -24,13 +26,13 @@ router.get('/', authMiddleware.takeToken ,(req, res) => {
 
 function validUser(user) {
 	const validName = typeof user.firstName == 'string' &&
-		user.firstName.trim() != '';
+		user.firstName.trim() != ''
 	const validLastName = typeof user.lastName == 'string' &&
 		user.lastName.trim() != '';
 	const validLogin = typeof user.username == 'string' &&
 		user.username.trim() != '';
 	const validEmail = typeof user.email == 'string' &&
-		user.email.trim() != '';
+		user.email.trim() != '' && validator.validate(user.email);
 	const validPassword = typeof user.password == 'string' &&
 		user.password.trim() != '' &&
 		user.password.trim().length >= 6;
@@ -77,19 +79,14 @@ router.post('/signup', (req, res, next) => {
 							User
 							.create(user)
 							.then(user => {
-								// res.json({
-								// 	user,
-								// 	message: '🔓'
-								// });
 								//create verification token for this users
-								jwt.sign({user: user}, 'mailConfirmationToken', {expiresIn: '12d'},(err, token) => {
+								jwt.sign({user: user}, 'mailConfirmationToken', (err, token) => {
 									//save verification token
 									const tokens = {
 										user_id: user,
 										token: token,
 										created_at: new Date()
 									};
-									console.log('token db : ', tokens.token);
 									//keep token in db
 									Token
 									.create(tokens)

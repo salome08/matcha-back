@@ -7,7 +7,11 @@ Add form-based cookie authentication to our sticker-mania app.
 * Logged In User - can only view the their page
 * Admin User - can view any page; can de-activate users;
 
-* [ ] Set confirmation mail
+* [X] Set confirmation mail
+* Set forgot password mail:
+	* sequelize mail is in db ?
+	* generate a token
+	* https://itnext.io/password-reset-emails-in-your-react-app-made-easy-with-nodemailer-bb27968310d7
 https://codemoto.io/coding/nodejs/email-verification-node-express-mongodb
 ## Authentication
 * [ ] Add auth router

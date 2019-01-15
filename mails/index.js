@@ -5,11 +5,10 @@ const Token = require('../db/token');
 const jwt = require('jsonwebtoken');
 
 
-router.post('/confirmation', (req, res, next) => {
+router.get('/confirmation', (req, res, next) => {
   // exports.confirmationPost = function (req, res, next) {
   const user_id = req.query.id;
   const token = req.query.token;
-  console.log('token : ', token);
 
   // Find a matching token
   Token
@@ -44,5 +43,14 @@ router.post('/confirmation', (req, res, next) => {
     }
   });
 });
+
+router.post('/forgotpassword', (req, res, next) => {
+  const email = req.body.email;
+  console.log('Email server : ', email);
+  res.json({
+    email,
+    message: 'ok'
+  });
+})
 // router.post('/resend');
 module.exports = router;
