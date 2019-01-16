@@ -11,7 +11,14 @@ Add form-based cookie authentication to our sticker-mania app.
 * Set forgot password mail:
 	* sequelize mail is in db ?
 	* generate a token
+	* put it in database
+	* send mail with token directing to another resetpasswordpage
+
+* make the tokens expires and resend
+
 	* https://itnext.io/password-reset-emails-in-your-react-app-made-easy-with-nodemailer-bb27968310d7
+
+
 https://codemoto.io/coding/nodejs/email-verification-node-express-mongodb
 ## Authentication
 * [ ] Add auth router
