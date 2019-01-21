@@ -4,7 +4,37 @@ const User = require('../db/user');
 const Token = require('../db/token');
 const mail = require('../mails/mail');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
+
+function verifyToken(id, token, next, callback) {
+  Token
+  .getOne(token)
+  .then((token) => {
+    if (token) {
+      //check if id == user_id in token table
+      if (token.user_id == id) {
+        // If we found a token, find a matching user
+        User
+        .getOne(id)
+        .then((user) => {
+          if(user){
+            callback(user);
+          }
+          else {
+            next(new Error('We were unable to find a user for this token.'));
+          }
+        });
+      }
+      else {
+        next(new Error('Sorry, this Email do not match this token'));
+      }
+    }
+    else {
+      next(new Error('We were unable to find a valid token. Your token may have expired.'));
+    }
+  });
+}
 
 router.get('/confirmation', (req, res, next) => {
   // exports.confirmationPost = function (req, res, next) {
@@ -12,44 +42,61 @@ router.get('/confirmation', (req, res, next) => {
   const token = req.query.token;
 
   // Find a matching token
-  Token
-  .getOne(token)
-  .then((token) => {
-    if (token) {
-      // If we found a token, find a matching user
+  verifyToken(user_id, token, (user) => {
+    if (!user.is_active){
       User
-      .getOne(user_id)
-      .then((user) => {
-        if(user){
-          if (!user.is_active){
-            User
-            .activate(user_id)
-            .then(() => {
-              res.json({
-                message: 'The account has been verified. Please log in.'
-              });
-            });
-          }
-          else {
-            next(new Error('This user has already been verified.'));
-          }
-        }
-        else {
-          next(new Error('We were unable to find a user for this token.'));
-        }
+      .activate(user_id)
+      .then(() => {
+        res.json({
+          message: 'The account has been verified. Please log in.'
+        });
       });
     }
     else {
-      next(new Error('We were unable to find a valid token. Your token may have expired.'));
+      next(new Error('This user has already been verified.'));
     }
   });
 });
 
+router.put('/updatePassword', (req, res, next) => {
+  //get values of user and new password
+  const password  = req.body.password;
+  const user_id = req.body.user_id;
+
+  //crypt password
+  if (password && user_id) {
+    bcrypt
+    .hash(password, 8)
+    .then((hash) => {
+      //change password in db
+      User
+      .updatePassword(user_id, hash)
+      .then((res) => {
+        res.json({
+          message: 'The password is update. Please log in.'
+        });
+      })
+      .catch((err) => {
+        next(new Error('Password is not update'));
+      });
+    });
+  }
+
+
+});
+
 router.post('/resetPassword', (req, res, next) => {
-  //verify token
-  res.json({
-    message: 'ok'
+  const token = req.body.token;
+  const user_id = req.body.id;
+  console.log('token :', token);
+  //verify token contenue dans l'url
+  verifyToken(user_id, token, next, (user) => {
+    if (user) {
+      res.json({user, message: 'tokenVerificationOK'});
+    }
   });
+  //delete pass from db
+
 });
 
 router.post('/forgotpassword', (req, res, next) => {

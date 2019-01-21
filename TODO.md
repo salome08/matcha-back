@@ -2,6 +2,10 @@
 
 Add form-based cookie authentication to our sticker-mania app.
 
+# verify token
+* find token in token table
+* check if id correspond to user_id of token table 
+
 ### We will have 3 types of users:
 * Visitors - can only view the homepage
 * Logged In User - can only view the their page
