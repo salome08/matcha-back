@@ -19,7 +19,7 @@ function verifyToken(id, token, next, callback) {
         .getOne(id)
         .then((user) => {
           if(user){
-            callback(user);
+            return callback(user);
           }
           else {
             next(new Error('We were unable to find a user for this token.'));
@@ -42,18 +42,20 @@ router.get('/confirmation', (req, res, next) => {
   const token = req.query.token;
 
   // Find a matching token
-  verifyToken(user_id, token, (user) => {
+  verifyToken(user_id, token, next, (user) => {
     if (!user.is_active){
       User
       .activate(user_id)
       .then(() => {
-        res.json({
-          message: 'The account has been verified. Please log in.'
-        });
+      //   res.json({
+      //     message: 'The account has been verified. Please log in.'
+      //   });
+        return res.redirect('http://localhost:8080/login');
       });
     }
     else {
-      next(new Error('This user has already been verified.'));
+      // next(new Error('This user has already been verified.'));
+      return res.redirect('http://localhost:8080/login');
     }
   });
 });
@@ -71,18 +73,16 @@ router.put('/updatePassword', (req, res, next) => {
       //change password in db
       User
       .updatePassword(user_id, hash)
-      .then((res) => {
-        res.json({
-          message: 'The password is update. Please log in.'
-        });
-      })
-      .catch((err) => {
-        next(new Error('Password is not update'));
+      .then((response) => {
+        if(response) {
+          res.json({message: 'Password is update'});
+        }
+        else {
+          next(new Error('Cannot change your password, try later'));
+        }
       });
     });
   }
-
-
 });
 
 router.post('/resetPassword', (req, res, next) => {

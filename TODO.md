@@ -1,10 +1,20 @@
+## 2 ## user profile
+
+* page to modify profile
+	* genre, sexuel orientation, bio, # , images >= 5  
+	* profile picture
+
+* [] tables into db
+
+
+
 # Auth
 
 Add form-based cookie authentication to our sticker-mania app.
 
 # verify token
 * find token in token table
-* check if id correspond to user_id of token table 
+* check if id correspond to user_id of token table
 
 ### We will have 3 types of users:
 * Visitors - can only view the homepage

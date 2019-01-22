@@ -29,6 +29,6 @@ module.exports = {
   activate: (id) => {
     return knex('user').where('id', id).update({
       is_active: 'true'
-    })
+    });
   }
 }

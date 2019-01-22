@@ -21,6 +21,7 @@
     "nodemailer": "^5.0.0",
     "nodemailer-smtp-transport": "^2.7.4",
     "pg": "^6.1.2",
+    "res-json": "^1.0.1",
     "serve-favicon": "^2.5.0",
     "xoauth2": "^1.2.0"
   }
