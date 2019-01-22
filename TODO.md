@@ -4,8 +4,9 @@
 	* genre, sexuel orientation, bio, # , images >= 5  
 	* profile picture
 
-* [] tables into db
-
+* [X] tables into db
+* modify profile page
+	->> have to be a protected page
 
 
 # Auth
