@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../db/user');
+const Tags = require('../db/tags');
 const authMiddleware = require('../auth/middleware');
 const Sticker = require('../db/sticker');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
 
 router.get('/', (req, res) => {
   // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
@@ -19,6 +22,59 @@ router.get('/', (req, res) => {
 		}
 	});
 });
+
+router.put('/editProfile', (req, res, next) => {
+  const user_id = req.body.user_id;
+  const toEdit = req.body.toEdit;
+    if (toEdit.gender){
+      console.log(toEdit.gender);
+    }
+    if (toEdit.affinity){
+      console.log(toEdit.affinity);
+    }
+    if (toEdit.bio){
+      console.log(toEdit.bio);
+    }
+    if (toEdit.tags){
+      toEdit.tags.forEach(function (element) {
+        Tags
+        .create(element.id)
+        .then(response => {
+          console.log('response : ', response);
+        })
+        .catch(err => {
+          console.log('err : ', err);
+        });
+
+      })
+    }
+    if (toEdit.name){
+      console.log(toEdit.name);
+    }
+    if (toEdit.lastname){
+      console.log(toEdit.lastname);
+    }
+    if (toEdit.email){
+      console.log(toEdit.email);
+    }
+    if (toEdit.password){
+      bcrypt
+      .hash(password, 8)
+      .then(hash => {
+        User
+        .updatePassword(user_id, hash)
+        .then(response => {
+          if (response) {
+            res.json({message: 'Password is update'});
+          }
+          else {
+            next(new Error('Cannot change your password, try later'));
+          }
+        })
+      });
+    }
+});
+
 
 router.get('/:id', (req, res) => {
   jwt.verify(req.token, 'secretkey', (err, authData) => {
