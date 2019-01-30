@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('tags', table => {
     table.increments();
-    table.string('tag_name', 255).notNullable();
+    table.text('tag_name').notNullable();
   });
 };
 

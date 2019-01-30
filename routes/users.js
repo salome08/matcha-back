@@ -38,13 +38,35 @@ router.put('/editProfile', (req, res, next) => {
     if (toEdit.tags){
       toEdit.tags.forEach(function (element) {
         Tags
-        .create(element.id)
+        .getOneByTagName(element.id)
         .then(response => {
-          console.log('response : ', response);
+          console.log(response);
+          if (response.length === 0){
+            Tags.create(element.id)
+          } else {
+            console.log('ca existe deja');
+          }
+          // if(response === undefined || response === null || response === ''){
+          //   Tags
+          //   .create(element.id)
+          //   .then(response2 => {
+          //     console.log('200')
+          //     console.log(response2);
+          //   })
+          //   .catch(err => {
+          //     console.log('400')
+          //     console.log(err);
+          //   });
+          // }
         })
         .catch(err => {
-          console.log('err : ', err);
+          console.log(err);
         });
+          //test if exist in table TAGS
+
+          //if yes just insert line in user-tags
+          //else insert tag in tags and line in user-tags
+
 
       })
     }
