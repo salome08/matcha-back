@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../db/user');
-const Tags = require('../db/tags');
 const authMiddleware = require('../auth/middleware');
 const Sticker = require('../db/sticker');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const Edit = require('./editProfileFunctions');
+
 
 
 router.get('/', (req, res) => {
@@ -36,39 +37,7 @@ router.put('/editProfile', (req, res, next) => {
       console.log(toEdit.bio);
     }
     if (toEdit.tags){
-      toEdit.tags.forEach(function (element) {
-        Tags
-        .getOneByTagName(element.id)
-        .then(response => {
-          console.log(response);
-          if (response.length === 0){
-            Tags.create(element.id)
-          } else {
-            console.log('ca existe deja');
-          }
-          // if(response === undefined || response === null || response === ''){
-          //   Tags
-          //   .create(element.id)
-          //   .then(response2 => {
-          //     console.log('200')
-          //     console.log(response2);
-          //   })
-          //   .catch(err => {
-          //     console.log('400')
-          //     console.log(err);
-          //   });
-          // }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-          //test if exist in table TAGS
-
-          //if yes just insert line in user-tags
-          //else insert tag in tags and line in user-tags
-
-
-      })
+      Edit.editTags(toEdit.tags, user_id, res, next);
     }
     if (toEdit.name){
       console.log(toEdit.name);
@@ -80,20 +49,7 @@ router.put('/editProfile', (req, res, next) => {
       console.log(toEdit.email);
     }
     if (toEdit.password){
-      bcrypt
-      .hash(password, 8)
-      .then(hash => {
-        User
-        .updatePassword(user_id, hash)
-        .then(response => {
-          if (response) {
-            res.json({message: 'Password is update'});
-          }
-          else {
-            next(new Error('Cannot change your password, try later'));
-          }
-        })
-      });
+      Edit.editPassword(toEdit.password, user_id, res, next)
     }
 });
 

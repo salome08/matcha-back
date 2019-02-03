@@ -2,14 +2,12 @@ const knex = require ('./connection');
 
 module.exports = {
   create: (tag) => {
-    console.log('tamerre')
-
-    return knex('tags')
-    .insert({'tag_name': tag}).then((value) => console.log(value))
+    return knex('tags').insert({'tag_name': tag}).returning('id').then(id => {
+      return id[0];
+    })
   },
   getOneByTagName:  (tag) => {
     // console.log('in getByTagName');
-    console.log(tag)
     // return knex('tags').where('tag_name', tag).first();
     return knex('tags').select().where('tag_name', tag)
   },
