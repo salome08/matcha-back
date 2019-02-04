@@ -28,29 +28,30 @@ router.put('/editProfile', (req, res, next) => {
   const user_id = req.body.user_id;
   const toEdit = req.body.toEdit;
     if (toEdit.gender){
-      console.log(toEdit.gender);
+      Edit.editGender(toEdit.gender, user_id, res, next);
     }
     if (toEdit.affinity){
-      console.log(toEdit.affinity);
+      Edit.editAffinity(toEdit.affinity, user_id, res, next);
     }
     if (toEdit.bio){
-      console.log(toEdit.bio);
+      Edit.editBio(toEdit.bio, user_id, res, next);
     }
     if (toEdit.tags){
       Edit.editTags(toEdit.tags, user_id, res, next);
     }
     if (toEdit.name){
-      console.log(toEdit.name);
+      Edit.editName(toEdit.name, user_id, res, next);
     }
     if (toEdit.lastname){
-      console.log(toEdit.lastname);
+      Edit.editLastname(toEdit.lastname, user_id, res, next);
     }
     if (toEdit.email){
-      console.log(toEdit.email);
+      Edit.editEmail(toEdit.email, user_id, res, next);
     }
     if (toEdit.password){
       Edit.editPassword(toEdit.password, user_id, res, next)
     }
+    res.json(200);
 });
 
 

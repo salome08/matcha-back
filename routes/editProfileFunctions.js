@@ -53,11 +53,38 @@ module.exports = {
     .hash(password, 8)
     .then(hash => {
       User.updatePassword(user_id, hash)
-      .then(() => {
-        res.json({message: 'password has been changed'});
-      })
       .catch(() => {next(new Error('Password is not update, try later'))});
     })
+  },
+  editGender: (gender, user_id, res, next) => {
+    User.updateGender(user_id, gender)
+
+    .catch(() => {next(new Error('gender is not update, try later'))});
+  },
+  editAffinity: (affinity, user_id, res, next) => {
+    User.updateAffinity(user_id, affinity)
+
+    .catch(() => {next(new Error('affinity is not update, try later'))});
+  },
+  editBio: (bio, user_id, res, next) => {
+    User.updateBio(user_id, bio)
+
+    .catch(() => {next(new Error('bio is not update, try later'))});
+  },
+  editName: (name, user_id, res, next) => {
+    User.updateName(user_id, name)
+
+    .catch(() => {next(new Error('name is not update, try later'))});
+  },
+  editLastname: (lastname, user_id, res, next) => {
+    User.updateLastname(user_id, lastname)
+
+    .catch(() => {next(new Error('lastname is not update, try later'))});
+  },
+  editEmail: (email, user_id, res, next) => {
+    User.updateEmail(user_id, email)
+
+    .catch(() => {next(new Error('email is not update, try later'))});
   },
 
 }

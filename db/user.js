@@ -41,6 +41,36 @@ module.exports = {
       lastname: lastname
     });
   },
+  updateGender: (id, gender) => {
+    return knex('user').where('id', id).update({
+      gender: gender
+    });
+  },
+  updateAffinity: (id, affinity) => {
+    return knex('user').where('id', id).update({
+      affinity: affinity
+    });
+  },
+  updateBio: (id, bio) => {
+    return knex('user').where('id', id).update({
+      bio: bio
+    });
+  },
+  updateName: (id, name) => {
+    return knex('user').where('id', id).update({
+      firstname: name
+    });
+  },
+  updateLastname: (id, lastname) => {
+    return knex('user').where('id', id).update({
+      lastname: lastname
+    });
+  },
+  updateEmail: (id, email) => {
+    return knex('user').where('id', id).update({
+      email: email
+    });
+  },
   activate: (id) => {
     return knex('user').where('id', id).update({
       is_active: 'true'

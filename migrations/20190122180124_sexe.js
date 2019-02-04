@@ -2,8 +2,8 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('sexe', table => {
     table.increments();
-    table.integer('gender').notNullable();
-    table.integer('affinity').notNullable();
+    table.integer('gender').nullable();
+    table.integer('affinity').nullable();
     table.boolean('valided').notNullable().defaultTo(false);
   });
 };
