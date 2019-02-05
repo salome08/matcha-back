@@ -24,40 +24,84 @@ router.get('/', (req, res) => {
 	});
 });
 
+function editProfile(toEdit, user_id, res, next, cb) {
+  if (toEdit.gender){
+    Edit.editGender(toEdit.gender, user_id, res, next, (user) => {
+      cb(user);
+    });
+  }
+  if (toEdit.affinity){
+    user = Edit.editAffinity(toEdit.affinity, user_id, res, next, (user) => {});
+  }
+  if (toEdit.bio){
+    Edit.editBio(toEdit.bio, user_id, res, next, (user) => {
+    });
+  }
+  if (toEdit.tags){
+    Edit.editTags(toEdit.tags, user_id, res, next, (user) => {
+    });
+  }
+  if (toEdit.name){
+    Edit.editName(toEdit.name, user_id, res, next, (user) => {
+    });
+  }
+  if (toEdit.lastname){
+    Edit.editLastname(toEdit.lastname, user_id, res, next, (user) => {
+    });
+  }
+  if (toEdit.email){
+    Edit.editEmail(toEdit.email, user_id, res, next, (user) => {
+    });
+  }
+  if (toEdit.password){
+    Edit.editPassword(toEdit.password, user_id, res, next, (user) => {
+    })
+  }
+}
+
 router.put('/editProfile', (req, res, next) => {
   const user_id = req.body.user_id;
   const toEdit = req.body.toEdit;
-    if (toEdit.gender){
-      Edit.editGender(toEdit.gender, user_id, res, next);
-    }
-    if (toEdit.affinity){
-      Edit.editAffinity(toEdit.affinity, user_id, res, next);
-    }
-    if (toEdit.bio){
-      Edit.editBio(toEdit.bio, user_id, res, next);
-    }
-    if (toEdit.tags){
-      Edit.editTags(toEdit.tags, user_id, res, next);
-    }
-    if (toEdit.name){
-      Edit.editName(toEdit.name, user_id, res, next);
-    }
-    if (toEdit.lastname){
-      Edit.editLastname(toEdit.lastname, user_id, res, next);
-    }
-    if (toEdit.email){
-      Edit.editEmail(toEdit.email, user_id, res, next);
-    }
-    if (toEdit.password){
-      Edit.editPassword(toEdit.password, user_id, res, next)
-    }
-    User.getOne(user_id)
-    .then(user => {
-      console.log('user : ', user);
-      if(user) {
-        res.json({user});
-      }
-    });
+
+  editProfile(toEdit, user_id, res, next, user => {
+    console.log('final usr : ', user);
+  });
+
+  // if (toEdit.gender){
+  //   Edit.editGender(toEdit.gender, user_id, res, next, (user) => {
+  //     console.log('user : ', user);
+  //     usr = user;
+  //     console.log('usr : ', usr);
+  //   });
+  // }
+  // if (toEdit.affinity){
+  //   user = Edit.editAffinity(toEdit.affinity, user_id, res, next, (user) => {});
+  // }
+  // if (toEdit.bio){
+  //   Edit.editBio(toEdit.bio, user_id, res, next, (user) => {
+  //   });
+  // }
+  // if (toEdit.tags){
+  //   Edit.editTags(toEdit.tags, user_id, res, next, (user) => {
+  //   });
+  // }
+  // if (toEdit.name){
+  //   Edit.editName(toEdit.name, user_id, res, next, (user) => {
+  //   });
+  // }
+  // if (toEdit.lastname){
+  //   Edit.editLastname(toEdit.lastname, user_id, res, next, (user) => {
+  //   });
+  // }
+  // if (toEdit.email){
+  //   Edit.editEmail(toEdit.email, user_id, res, next, (user) => {
+  //   });
+  // }
+  // if (toEdit.password){
+  //   Edit.editPassword(toEdit.password, user_id, res, next, (user) => {
+  //   })
+  // }
+  // console.log('end usr : ', usr);
 });
 
 

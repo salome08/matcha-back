@@ -44,12 +44,12 @@ module.exports = {
   updateGender: (id, gender) => {
     return knex('user').where('id', id).update({
       gender: gender
-    });
+    }).returning('*').then(user => {return user[0];});
   },
   updateAffinity: (id, affinity) => {
     return knex('user').where('id', id).update({
       affinity: affinity
-    });
+    }).returning('*').then(user => {return user[0];});
   },
   updateBio: (id, bio) => {
     return knex('user').where('id', id).update({
