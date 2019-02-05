@@ -51,7 +51,13 @@ router.put('/editProfile', (req, res, next) => {
     if (toEdit.password){
       Edit.editPassword(toEdit.password, user_id, res, next)
     }
-    res.json(200);
+    User.getOne(user_id)
+    .then(user => {
+      console.log('user : ', user);
+      if(user) {
+        res.json({user});
+      }
+    });
 });
 
 
