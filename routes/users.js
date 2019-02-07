@@ -24,48 +24,42 @@ router.get('/', (req, res) => {
 	});
 });
 
-function editProfile(toEdit, user_id, res, next, cb) {
+async function editProfile(toEdit, user_id, res, next) {
+  let user = '';
   if (toEdit.gender){
-    Edit.editGender(toEdit.gender, user_id, res, next, (user) => {
-      cb(user);
-    });
+    user = await Edit.editGender(toEdit.gender, user_id, res, next);
+      console.log('passage par gender :)', user);
   }
   if (toEdit.affinity){
-    user = Edit.editAffinity(toEdit.affinity, user_id, res, next, (user) => {});
+    user = Edit.editAffinity(toEdit.affinity, user_id, res, next);
   }
   if (toEdit.bio){
-    Edit.editBio(toEdit.bio, user_id, res, next, (user) => {
-    });
+    Edit.editBio(toEdit.bio, user_id, res, next);
   }
   if (toEdit.tags){
-    Edit.editTags(toEdit.tags, user_id, res, next, (user) => {
-    });
+    Edit.editTags(toEdit.tags, user_id, res, next);
   }
   if (toEdit.name){
-    Edit.editName(toEdit.name, user_id, res, next, (user) => {
-    });
+    Edit.editName(toEdit.name, user_id, res, next);
   }
   if (toEdit.lastname){
-    Edit.editLastname(toEdit.lastname, user_id, res, next, (user) => {
-    });
+    Edit.editLastname(toEdit.lastname, user_id, res, next);
   }
   if (toEdit.email){
-    Edit.editEmail(toEdit.email, user_id, res, next, (user) => {
-    });
+    Edit.editEmail(toEdit.email, user_id, res, next);
   }
   if (toEdit.password){
     Edit.editPassword(toEdit.password, user_id, res, next, (user) => {
-    })
+    });
   }
+  console.log('fin des ifs user : ', user);
 }
 
 router.put('/editProfile', (req, res, next) => {
   const user_id = req.body.user_id;
   const toEdit = req.body.toEdit;
 
-  editProfile(toEdit, user_id, res, next, user => {
-    console.log('final usr : ', user);
-  });
+  editProfile(toEdit, user_id, res, next);
 
   // if (toEdit.gender){
   //   Edit.editGender(toEdit.gender, user_id, res, next, (user) => {

@@ -95,8 +95,6 @@ router.post('/resetPassword', (req, res, next) => {
       res.json({user, message: 'tokenVerificationOK'});
     }
   });
-  //delete pass from db
-
 });
 
 router.post('/forgotpassword', (req, res, next) => {
@@ -128,7 +126,7 @@ router.post('/forgotpassword', (req, res, next) => {
             });
 
           //send mail
-            mail.sendForgotPasswordMail(email, tokens, (err, res) => {
+            mail.sendForgotPasswordMail(user.login, email, tokens, (err, res) => {
               if (err) {
                 next(new Error('Error: Email has not been send'));
               }

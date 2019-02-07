@@ -56,10 +56,16 @@ module.exports = {
       .catch(() => {next(new Error('Password is not update, try later'))});
     })
   },
-  editGender: (gender, user_id, res, next, cb) => {
+  editGender: (gender, user_id, res, next) => {
+     // User.updateGender(user_id, gender);
+    // .then(usr => {
     return User.updateGender(user_id, gender)
-    .then(usr => {cb(usr);})
-    .catch(() => {next(new Error('gender is not update, try later'))});
+    .then((usr) => {
+      return (usr);
+    });
+    // console.log('user after update');
+    //   return (usr);})
+    // .catch(() => {next(new Error('gender is not update, try later'))});
   },
   editAffinity: (affinity, user_id, res, next) => {
     User.updateAffinity(user_id, affinity)

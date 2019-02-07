@@ -33,13 +33,13 @@ function sendConfirmationMail(email, token){
   return (transporter.sendMail(mailOptions));
 }
 
-function sendForgotPasswordMail(email, token){
+function sendForgotPasswordMail(login, email, token){
   // setup e-mail data with unicode symbols
   const mailOptions = {
       from: "Matcha ✔ <" + process.env.ENV_MAIL + ">", // sender address
       to: email, // list of receivers
       subject: "Account Forgot Password", // Subject line
-      text: 'Hello,\n\n' + 'Reset your password by clicking the link: \nhttp:\/\/localhost:8080/resetPassword?id=' + token.user_id + '&token=' + token.token + '.\n' // plaintext body
+      text: 'Hello ' + login + ', \n\n' + 'Reset your password by clicking the link: \nhttp:\/\/localhost:8080/resetPassword?id=' + token.user_id + '&token=' + token.token + '.\n' // plaintext body
       // html: "<b>Hello world ✔</b>" + token // html body
   }
 

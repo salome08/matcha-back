@@ -12,10 +12,10 @@ var validator = require('email-validator');
 
 router.get('/', authMiddleware.takeToken ,(req, res) => {
 	jwt.verify(req.token, 'loginToken', (err, authData) => {
-		if(err) {
+		if(err){
 			res.sendStatus(403);
 		}
-		else {
+		else{
 			res.json({
 				message: 'hello 🔓',
 				authData
@@ -109,6 +109,7 @@ router.post('/signup', (req, res, next) => {
 						next(new Error('Login already used'));
 					}
 				});
+
 			}
 			else {
 				next(new Error('Email in  use'));
