@@ -24,22 +24,22 @@ module.exports = {
   updatePassword: (id, password) => {
     return knex('user').where('id', id).update({
       password: password
-    });
+    }).returning('*').then(user => {return user[0];});;
   },
   updateEmail: (id, email) => {
     return knex('user').where('id', id).update({
       email: email
-    });
+    }).returning('*').then(user => {return user[0];});;
   },
   updateFirstname: (id, firstame) => {
     return knex('user').where('id', id).update({
       firstame: firstame
-    });
+    }).returning('*').then(user => {return user[0];});;
   },
   updateLastname: (id, lastname) => {
     return knex('user').where('id', id).update({
       lastname: lastname
-    });
+    }).returning('*').then(user => {return user[0];});;
   },
   updateGender: (id, gender) => {
     return knex('user').where('id', id).update({
@@ -54,22 +54,12 @@ module.exports = {
   updateBio: (id, bio) => {
     return knex('user').where('id', id).update({
       bio: bio
-    });
+    }).returning('*').then(user => {return user[0];});
   },
   updateName: (id, name) => {
     return knex('user').where('id', id).update({
       firstname: name
-    });
-  },
-  updateLastname: (id, lastname) => {
-    return knex('user').where('id', id).update({
-      lastname: lastname
-    });
-  },
-  updateEmail: (id, email) => {
-    return knex('user').where('id', id).update({
-      email: email
-    });
+    }).returning('*').then(user => {return user[0];});
   },
   activate: (id) => {
     return knex('user').where('id', id).update({

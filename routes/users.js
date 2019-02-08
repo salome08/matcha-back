@@ -26,40 +26,45 @@ router.get('/', (req, res) => {
 
 async function editProfile(toEdit, user_id, res, next) {
   let user = '';
-  if (toEdit.gender){
+try {
+    if (toEdit.gender){
     user = await Edit.editGender(toEdit.gender, user_id, res, next);
-      console.log('passage par gender :)', user);
   }
   if (toEdit.affinity){
-    user = Edit.editAffinity(toEdit.affinity, user_id, res, next);
+    user = await Edit.editAffinity(toEdit.affinity, user_id, res, next);
   }
   if (toEdit.bio){
-    Edit.editBio(toEdit.bio, user_id, res, next);
+    user = await Edit.editBio(toEdit.bio, user_id, res, next);
   }
   if (toEdit.tags){
-    Edit.editTags(toEdit.tags, user_id, res, next);
+    user = await Edit.editTags(toEdit.tags, user_id, res, next);
   }
   if (toEdit.name){
-    Edit.editName(toEdit.name, user_id, res, next);
+    user = await Edit.editName(toEdit.name, user_id, res, next);
   }
   if (toEdit.lastname){
-    Edit.editLastname(toEdit.lastname, user_id, res, next);
+    user = await Edit.editLastname(toEdit.lastname, user_id, res, next);
   }
   if (toEdit.email){
-    Edit.editEmail(toEdit.email, user_id, res, next);
+    user = await Edit.editEmail(toEdit.email, user_id, res, next);
   }
   if (toEdit.password){
-    Edit.editPassword(toEdit.password, user_id, res, next, (user) => {
-    });
+    let hash = await bcrypt.hash(toEdit.password, 8);
+    user = await Edit.editPassword(hash, user_id, res, next);
   }
-  console.log('fin des ifs user : ', user);
+} catch (e) {
+  next(new Error('informations are not update, try later'));
 }
 
-router.put('/editProfile', (req, res, next) => {
+  return (user);
+}
+
+router.put('/editProfile', async (req, res, next) => {
   const user_id = req.body.user_id;
   const toEdit = req.body.toEdit;
 
-  editProfile(toEdit, user_id, res, next);
+  let user = await editProfile(toEdit, user_id, res, next);
+  res.json({user});
 
   // if (toEdit.gender){
   //   Edit.editGender(toEdit.gender, user_id, res, next, (user) => {

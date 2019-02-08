@@ -48,49 +48,51 @@ module.exports = {
       });
     })
   },
-  editPassword: (password, user_id, res, next) => {
-    bcrypt
-    .hash(password, 8)
-    .then(hash => {
-      User.updatePassword(user_id, hash)
-      .catch(() => {next(new Error('Password is not update, try later'))});
-    })
+  editPassword: async (hash, user_id, res, next) => {
+
+      let user = await User.updatePassword(user_id, hash);
+      return user;
+      // .catch(() => {next(new Error('Password is not update, try later'))});
   },
-  editGender: (gender, user_id, res, next) => {
+  editGender: async (gender, user_id, res, next) => {
      // User.updateGender(user_id, gender);
     // .then(usr => {
-    return User.updateGender(user_id, gender)
-    .then((usr) => {
-      return (usr);
-    });
+    let user = await User.updateGender(user_id, gender);
+    return user;
+
     // console.log('user after update');
     //   return (usr);})
     // .catch(() => {next(new Error('gender is not update, try later'))});
   },
-  editAffinity: (affinity, user_id, res, next) => {
-    User.updateAffinity(user_id, affinity)
-    .then(user => {return user})
-    .catch(() => {next(new Error('affinity is not update, try later'))});
+  editAffinity: async (affinity, user_id, res, next) => {
+    let user = await User.updateAffinity(user_id, affinity);
+    return user;
+    // .then(user => {return user})
+    // .catch(() => {next(new Error('affinity is not update, try later'))});
   },
-  editBio: (bio, user_id, res, next) => {
-    User.updateBio(user_id, bio)
+  editBio: async (bio, user_id, res, next) => {
+    let user = await User.updateBio(user_id, bio);
+    return user;
 
-    .catch(() => {next(new Error('bio is not update, try later'))});
+    // .catch(() => {next(new Error('bio is not update, try later'))});
   },
-  editName: (name, user_id, res, next) => {
-    User.updateName(user_id, name)
+  editName: async (name, user_id, res, next) => {
+    let user = await User.updateName(user_id, name);
+    return user;
 
-    .catch(() => {next(new Error('name is not update, try later'))});
+    // .catch(() => {next(new Error('name is not update, try later'))});
   },
-  editLastname: (lastname, user_id, res, next) => {
-    User.updateLastname(user_id, lastname)
+  editLastname: async (lastname, user_id, res, next) => {
+    let user = await User.updateLastname(user_id, lastname);
+    return user;
 
-    .catch(() => {next(new Error('lastname is not update, try later'))});
+    // .catch(() => {next(new Error('lastname is not update, try later'))});
   },
-  editEmail: (email, user_id, res, next) => {
-    User.updateEmail(user_id, email)
+  editEmail: async (email, user_id, res, next) => {
+    let user = await User.updateEmail(user_id, email);
+    return user;
 
-    .catch(() => {next(new Error('email is not update, try later'))});
+    // .catch(() => {next(new Error('email is not update, try later'))});
   },
 
 }
